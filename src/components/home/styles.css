@@ -1,0 +1,29 @@
+*,*::before, *::after{
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#home{
+  width: 100vw;
+  height: 100vh;
+  border: 2px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#hero{
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+#btn{
+  background: linear-gradient(90deg,#FF4331, #D31A50);
+  color:white;
+  padding: 1rem;
+  font-weight: 700;
+  border-radius: 10px;
+}
