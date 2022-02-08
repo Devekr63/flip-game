@@ -1,12 +1,10 @@
-export default function getRandomShapes(shapes, picks, rcl){
+export default function getRandomShapes(shapes, picks){
   let nums = fill(picks);
   nums = randomArrays(nums);
 
   let res =  nums.map(
     (i) => shapes[i]
   )
-  rcl(res);
-  console.log(rcl);
   return res;
 }
 

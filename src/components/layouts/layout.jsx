@@ -9,12 +9,11 @@ const flipedCardsIds = {
   __id: ""
 }
 
-const rcl = {list : []};
-
 export default function layout(props){
   const [dlevel, setLevel] = useState(props.gameLevel());
-  const [timeLimit, setLimit] = useState(1000);
-  const [nofFlips, setnofFlips] = useState(0);
+  const [timeLimit, setLimit] = useState(props.gameLevel().time);
+  const [nofFlips, setnofFlips] = useState(props.gameLevel().fCards);
+  const [randomCards, updateRC] = useState(getRandomShapes(shapes, nofFlips/2));
   
   function checkFlips(id){
     if(!flipedCardsIds._id){
@@ -24,33 +23,21 @@ export default function layout(props){
       flipedCardsIds.__id = id;
     }
     else if(flipedCardsIds._id === flipedCardsIds.__id){
-      //blank both the cards//
+      updateRC(randomCards.map(
+        (object) => {
+          if(object.id === flipedCardsIds._id){
+            return {...blank, id:flipedCardsIds._id}; 
+          }
+          return object;
+        }
+      ));
     }
     else{
       //flip back both the cards//
+      flipedCardsIds._id = "";
+      flipedCardsIds.__id = "";
     }
   }
-
-  function handleRCL(list){
-    rcl.list = list;
-  }
-
-  useEffect(
-    () => {
-      if(dlevel === 'average'){
-        setLimit(40*1000);
-        setnofFlips(40);
-      }
-      else if(dlevel === 'mastermind'){
-        setLimit(60*1000);
-        setnofFlips(60);
-      }
-      else{
-        setLimit(80*1000);
-        setnofFlips(80);
-      }
-    }
-  ,[]);
 
   return(
     <div id="main--container">
@@ -58,8 +45,9 @@ export default function layout(props){
         Home
       </button>
       <div id="cards--container">
-        {getRandomShapes(shapes, nofFlips/2, handleRCL).map((shape) => 
+        {randomCards.map((shape) => 
           <Card 
+            key={`${shape.id}${shape.backgroundColor}`} 
             shape={shape} 
             getId={(id) => checkFlips(id)}
           />  
@@ -68,3 +56,9 @@ export default function layout(props){
     </div>
   );
 }
+
+const blank = {
+  height:'25px',
+  width:'25px',
+  backgroundColor:'white',
+};
