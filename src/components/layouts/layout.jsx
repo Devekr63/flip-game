@@ -4,10 +4,7 @@ import shapes from '../shapes';
 import './styles.css';
 import getRandomShapes from '../utils';
 
-const flipedCardsIds = {
-  _id : "",
-  __id: ""
-}
+let flipedCardsIds;
 
 export default function layout(props){
   const [dlevel, setLevel] = useState(props.gameLevel());
@@ -15,29 +12,34 @@ export default function layout(props){
   const [nofFlips, setnofFlips] = useState(props.gameLevel().fCards);
   const [randomCards, updateRC] = useState(getRandomShapes(shapes, nofFlips/2));
   
-  function checkFlips(id){
+  function checkFlips(id_){
     if(!flipedCardsIds._id){
-      flipedCardsIds._id = id;
+      flipedCardsIds._id = id_;
     }
-    else if(!flipedCardsIds.__id){
-      flipedCardsIds.__id = id;
-    }
-    else if(flipedCardsIds._id === flipedCardsIds.__id){
+    else if(flipedCardsIds._id === id_){
       updateRC(randomCards.map(
         (object) => {
           if(object.id === flipedCardsIds._id){
-            return {...blank, id:flipedCardsIds._id}; 
+            return {...blank, id:id_}; 
           }
           return object;
         }
       ));
+      flipedCardsIds._id = "";
     }
     else{
       //flip back both the cards//
       flipedCardsIds._id = "";
-      flipedCardsIds.__id = "";
     }
   }
+
+  useEffect(() => {
+    flipedCardsIds = {
+      _id : "",
+    }
+
+    return () => {flipedCardsIds = {}}
+  },[]);
 
   return(
     <div id="main--container">
@@ -45,9 +47,9 @@ export default function layout(props){
         Home
       </button>
       <div id="cards--container">
-        {randomCards.map((shape) => 
+        {randomCards.map((shape,index) => 
           <Card 
-            key={`${shape.id}${shape.backgroundColor}`} 
+            key={`${shape.id}${shape.backgroundColor}${index}`} 
             shape={shape} 
             getId={(id) => checkFlips(id)}
           />  
